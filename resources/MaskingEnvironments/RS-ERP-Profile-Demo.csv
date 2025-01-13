@@ -1,0 +1,16 @@
+Environment Name,Rule Set,Table Name,Type,Parent Column Name,Column Name,Data Type,Domain,Algorithm,Document Store Type,File Format,Is Masked,ID Method,Row Type,Date Format,Notes,Multi-Column Logical Field,Group Number,SQL Type Code
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,amount,varchar (20),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,cust_id,int4 (10),-,-,-,-,false,Auto,All Row,-,-,-,0,4
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,IX,-,id,serial (10),-,-,-,-,false,Auto,All Row,-,-,-,0,4
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,item,varchar (100),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_date,date (13),-,-,-,-,false,Auto,All Row,-,-,-,0,91
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_latitude,varchar (20),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_longitude,varchar (20),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_name,varchar (200),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_postcode,varchar (4),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_state,varchar (3),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_streeet_no,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_street,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_suburb,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,ship_unit_no,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+ERP Profile Demo,RS-ERP-Profile-Demo,transactions,-,-,trans_date,date (13),-,-,-,-,false,Auto,All Row,-,-,-,0,91

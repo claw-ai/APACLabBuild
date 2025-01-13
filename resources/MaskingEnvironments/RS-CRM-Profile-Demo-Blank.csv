@@ -1,0 +1,19 @@
+Environment Name,Rule Set,Table Name,Type,Parent Column Name,Column Name,Data Type,Domain,Algorithm,Document Store Type,File Format,Is Masked,ID Method,Row Type,Date Format,Notes,Multi-Column Logical Field,Group Number,SQL Type Code
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,birth_date,date (13),-,-,-,-,false,Auto,All Row,-,-,-,0,91
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,description,varchar (1000),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,email,varchar (100),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,first_name,varchar (100),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,fullname,varchar (300),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,IX,-,id,serial (10),-,-,-,-,false,Auto,All Row,-,-,-,0,4
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,id_doc_number,varchar (50),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,id_doc_type,varchar (2),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,last_name,varchar (100),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,latitude,varchar (20),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,longitude,varchar (20),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,phone_number,varchar (20),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,postcode,varchar (4),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,state,varchar (3),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,streeet_no,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,street,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,suburb,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12
+CRM Profile Demo,RS-CRM-Profile-Demo,contacts,-,-,unit_no,varchar (150),-,-,-,-,false,Auto,All Row,-,-,-,0,12

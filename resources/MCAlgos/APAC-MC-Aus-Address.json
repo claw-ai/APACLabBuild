@@ -1,0 +1,27 @@
+{
+    "option1": "LOOKUP",
+    "option2": "LOOKUP",
+    "option3": "LOOKUP",
+    "filterCity": false,
+    "lookupFile": {
+        "uri": "delphix-file://upload/f_a88dbafa371148bdb4dff31fa799b088/100Kaddress_data_file_view_202411201025.psv"
+    },
+    "regexFields": null,
+    "csvDelimiter": "\\|",
+    "addressGroups": [],
+    "fallbackGroup": null,
+    "usZipMatching": false,
+    "enforceNotNull": true,
+    "matchingColumn": "",
+    "option1Algorithm": null,
+    "option2Algorithm": null,
+    "option3Algorithm": null,
+    "filterCityReapply": false,
+    "inputRemoveSpaces": true,
+    "inputCaseSensitive": false,
+    "externalSecurityKey": 0,
+    "filterCityValueList": "",
+    "preserveEmptyFields": true,
+    "columnsUsedToBuildHash": "",
+    "enforceNotNullReplacement": "_"
+}

@@ -1,0 +1,46 @@
+{
+    "conditions": [
+        {
+            "key": [
+                "01"
+            ],
+            "string1": {
+                "name": "dlpx-core:CM Numeric"
+            }
+        },
+        {
+            "key": [
+                "02"
+            ],
+            "string1": {
+                "name": "dlpx-core:CM Numeric"
+            }
+        },
+        {
+            "key": [
+                "03"
+            ],
+            "string1": {
+                "name": "CreditCard"
+            }
+        }
+    ],
+    "fallbackKey": "",
+    "fallbackAlgo": {
+        "dateAlgo": {
+            "name": "DateShiftDiscrete"
+        },
+        "binaryAlgo": {
+            "name": "NullValueLookup"
+        },
+        "stringAlgo": {
+            "name": "dlpx-core:CM Alpha-Numeric"
+        },
+        "numericAlgo": {
+            "name": "dlpx-core:CM Numeric"
+        }
+    },
+    "filterLength": 0,
+    "filterDirection": "FIRST",
+    "keyCaseSensitive": false
+}

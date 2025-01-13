@@ -329,7 +329,7 @@ ERPMASKGCJOBID=$( echo $result | jq -r .responseList[0].maskingJobId )
 echo
 echo $result
 echo
-echo CRM Mask GC Job ID : $ERPMASKGCJOBID
+echo ERP Mask GC Job ID : $ERPMASKGCJOBID
 
 # Save ID to config file
 echo "$(jq '.ERPMASKGCJOBID='\""$ERPMASKGCJOBID"\"'' config.json)" > config.json

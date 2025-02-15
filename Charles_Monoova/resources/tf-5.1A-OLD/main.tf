@@ -37,8 +37,8 @@ resource "delphix_vdb" "5.1A" {
     database_name           = "5.1A"
     auto_select_repository  = true
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/monoova/5.1A"
-        postgresPort        = 8060
+        mountLocation       = "/mnt/provision/crm-qa"
+        postgresPort        = 8051
     })
 
     configure_clone {

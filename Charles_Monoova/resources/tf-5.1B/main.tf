@@ -28,17 +28,17 @@ locals {
 # Dev vDBs
 ## CRM Dev vDB
 resource "delphix_vdb" "5.1B" {
-    depends_on              = [ delphix_vdb.crm-mask ]
+    depends_on              = [ delphix_vdb.5.1A ]
     name                    = "5.1B"
-    source_data_id          = delphix_vdb.crm-mask.id
+    source_data_id          = delphix_vdb.5.1A.id
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
     target_group_id         = local.group_other
     database_name           = "5.1B"
     auto_select_repository  = true
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/5.1B"
-        postgresPort        = 8052
+        mountLocation       = "/mnt/provision/monoova/5.1B"
+        postgresPort        = 8061
     })
 
     configure_clone {

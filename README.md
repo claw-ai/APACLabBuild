@@ -18,7 +18,7 @@ The core files in this repository are:
 This is designed to work with the "Delphix-Blazemeter Demo 2.0" image available in CloudShare. It has been tested with v15 of that image. Once you have spun up a copy of that environment, to prepare to run the build scripts first:
 1. Open the Jenkins page and run the pipeline *Demo 2.0 Postgres > 01A-Create DCT environment*. This pipeline will set up DCT by registering the Continuous Data and Compliance engines. This needs to be completed prior to running these build scripts
 2. Get the files in this repository into the environment on the *DCT K8S - Jenkins* VM by either:
-    - executing *git clone https://github.com/jondawes/APACLabBuild.git* (or with the relevant URL if this moves)
+    - executing *git clone https://github.com/claw-ai/APACLabBuild.git* (or with the relevant URL if this moves)
     - Copying the files into your CLoud Folder and mounting them into the VM (At tht time of writing, Cloud Folders do not appear to work on that VM but it is being fixed in the image)
 3. Import the DBeaver configuration - the file ./resources/DBeaverProject/APAC Demo-20241114.dbp contains a DBeaver project that will provide preconfigiured connections to all the databases that are used as part of this demo. This can be imported by copying the file to you Cloudshare Cloud Folder and importing on the Developer 2.0 VM.
     - You can import by selecting **File > Import** then choosing **Project** and clickiong **Next >**. Select the import file and check the box next to **APAC Demo**. You can change the Target Name if desired. Click **Finish** to import the project.

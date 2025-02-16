@@ -27,17 +27,17 @@ locals {
 
 # Dev vDBs
 ## CRM Dev vDB
-resource "delphix_vdb" "5_1C" {
-    depends_on              = [ delphix_vdb.5_1B ]
+resource "delphix_vdb" "M5_1C" {
+    depends_on              = [ delphix_vdb.M5_1B ]
     name                    = "5.1B"
-    source_data_id          = delphix_vdb.5_1B.id
+    source_data_id          = delphix_vdb.M5_1B.id
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
     target_group_id         = local.group_other
-    database_name           = "5_1C"
+    database_name           = "M5_1C"
     auto_select_repository  = true
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/monoova/5_1C"
+        mountLocation       = "/mnt/provision/monoova/M5_1C"
         postgresPort        = 8062
     })
 
@@ -60,9 +60,9 @@ resource "delphix_vdb" "5_1C" {
 }
 ## vDB Group for Dev
 resource "delphix_vdb_group" "customer" {
-    depends_on      = [ delphix_vdb.5_1C ]
+    depends_on      = [ delphix_vdb.M5_1C ]
     name            = "customer"
-    vdb_ids         = [ delphix_vdb.5_1C.id ]
+    vdb_ids         = [ delphix_vdb.M5_1C.id ]
     
 }
 

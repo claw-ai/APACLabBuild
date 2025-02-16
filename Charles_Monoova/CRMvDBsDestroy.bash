@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build Static environment
-cd ./resources/tf-5.1A
+cd ./resources/tf-StaticEnvironmentMaskGCOnly
 terraform init
 terraform destroy --auto-approve
 cd ../..

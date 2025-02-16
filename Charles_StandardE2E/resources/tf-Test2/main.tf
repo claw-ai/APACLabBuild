@@ -25,7 +25,7 @@ locals {
 
 
 # CRM vDB
-resource "delphix_vdb" "crm-ephemeral" {
+resource "delphix_vdb" "crm-ephemeral2" {
     name                    = "crm-ephemeral2"
     source_data_id          = local.crm_enrichment
     environment_id          = local.environment_target

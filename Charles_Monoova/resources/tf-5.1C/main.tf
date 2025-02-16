@@ -18,19 +18,19 @@ provider "delphix" {
 # Variables
 locals {
     environment_staging     = "Postgres Staging"
-
     group_other             = "Other"
-
-    customer_name           = "Monoova"
+    crm_masked              = "crm-mask"
+    m5_1A                   = "M5_1A"   
+    m5_1B                   = "M5_1B"   
+    m5_1C                   = "M5_1C"   
 }
 
 
 # Dev vDBs
 ## CRM Dev vDB
 resource "delphix_vdb" "M5_1C" {
-    depends_on              = [ delphix_vdb.M5_1B ]
-    name                    = "5.1B"
-    source_data_id          = delphix_vdb.M5_1B.id
+    name                    = "M5_1C"
+    source_data_id          = local.m5_1B
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
     target_group_id         = local.group_other

@@ -58,16 +58,3 @@ resource "delphix_vdb" "M5_1A" {
     }
 
 }
-## vDB Group for Dev
-resource "delphix_vdb_group" "customer" {
-    depends_on      = [ delphix_vdb.M5_1A ]
-    name            = "customer"
-    vdb_ids         = [ delphix_vdb.M5_1A.id ]
-    
-}
-
-## Save vDB Group ID to output
-output "customer-id" {
-    depends_on      = [ delphix_vdb_group.customer ]
-    value           = delphix_vdb_group.customer.id
-}

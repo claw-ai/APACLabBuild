@@ -126,6 +126,7 @@ resource "delphix_vdb" "crm-mask" {
 
 ## M5.1A
 resource "delphix_vdb" "M5_1A" {
+    depends_on              = [ delphix_vdb.crm-mask ]
     name                    = "M5_1A"
     source_data_id          = local.crm_masked
     environment_id          = local.environment_staging

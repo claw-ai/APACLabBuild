@@ -146,6 +146,10 @@ resource "delphix_vdb" "M5_1A" {
                             echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
                             # reload postgress to make above take effect
                             /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
+
+
+                            # Drop even id records
+                            psql -p 8060 --quiet -d crm -c "delete from crm.public.contacts where id % 2 = 0;"
                             EOT
         shell           = "bash"
     }
@@ -179,6 +183,9 @@ resource "delphix_vdb" "M5_1B" {
                             echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
                             # reload postgress to make above take effect
                             /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
+
+                            # Update database with extra record
+                            psql -p 8061 --quiet -d crm -c "INSERT INTO public.contacts (first_name, last_name, fullname, birth_date, unit_no, streeet_no, street, suburb, state, postcode, longitude, latitude, phone_number, email, id_doc_type, id_doc_number, description) VALUES('Mary', 'Jones', 'Mary Lee Jones', '1968-10-02', 'L14', '4-6', 'Blighe St', 'Sydney', 'NSW', '2000', '151.2105208', '-33.8657476', '+61 (02)8265 5625', 'mary.jones@example.com', '02', 'PA532705252', NULL);"
                             EOT
         shell           = "bash"
     }

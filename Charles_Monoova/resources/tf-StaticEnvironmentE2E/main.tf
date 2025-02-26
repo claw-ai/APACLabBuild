@@ -26,7 +26,6 @@ locals {
     group_dev               = "DEV"
     group_qa                = "QA"
     group_enrich            = "Other"
-    group_unmask            = "Unmask"
 
 }
 
@@ -131,7 +130,7 @@ resource "delphix_vdb" "crm-unmask" {
     source_data_id          = delphix_appdata_dsource.Postgres_crm.id
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
-    target_group_id         = local.group_unmask
+    target_group_id         = local.group_enrich
     database_name           = "crm-unmask"
     auto_select_repository  = true
     masked = false

@@ -65,7 +65,7 @@ resource "delphix_vdb" "M5_1A" {
 ## M5.1B
 resource "delphix_vdb" "M5_1B" {
     depends_on              = [ delphix_vdb.M5_1A ]
-    name                    = "M5_2B"
+    name                    = "M5_1B"
     source_data_id          = local.m5_1A
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"

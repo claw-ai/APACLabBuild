@@ -134,8 +134,8 @@ resource "delphix_vdb" "crm-unmask" {
     auto_select_repository  = true
     masked = false
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/crm-unmask"
-        postgresPort        = 8020
+        mountLocation       = "/mnt/provision//crm_unmask"
+        postgresPort        = 8040
     })
 
     configure_clone {

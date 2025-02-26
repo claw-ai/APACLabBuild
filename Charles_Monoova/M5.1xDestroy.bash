@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build Static environment
-cd ./resources/tf-Test1
+cd ./resources/tf-5.1x
 terraform init
-terraform apply --auto-approve
+terraform destroy --auto-approve
 cd ../..

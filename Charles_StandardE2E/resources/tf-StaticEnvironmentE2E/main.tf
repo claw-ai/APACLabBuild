@@ -26,6 +26,7 @@ locals {
     group_dev               = "DEV"
     group_qa                = "QA"
     group_enrich            = "Other"
+    group_unmask            = "UnMasked"
 }
 
 
@@ -74,52 +75,6 @@ resource "delphix_appdata_dsource" "Postgres_crm" {
     })
 }
 
-/*
-## ERP dSource
-
-resource "delphix_database_postgresql" "Postgres_erp" {
-    name             = "Postgres_erp"
-    repository_value = "Postgres vFiles (15.0)"
-    environment_value = local.environment_source
-    tags {
-        key   = "region"
-        value = "apac"
-    }
-}
-
-resource "delphix_appdata_dsource" "Postgres_erp" {
-    depends_on                 = [ delphix_database_postgresql.Postgres_erp ]
-    source_value               = delphix_database_postgresql.Postgres_erp.id
-    group_id                   = local.group_source
-    log_sync_enabled           = false
-    make_current_account_owner = true
-    link_type                  = "AppDataStaged"
-    name                       = "Postgres_erp"
-    staging_mount_base         = "" 
-    environment_user           = "postgres"
-    staging_environment        = local.environment_source
-    parameters = jsonencode({
-        singleDatabaseIngestionFlag : true,
-        singleDatabaseIngestion : [
-            {
-                databaseUserName: "postgres",
-                sourcePort: 5432,
-                dumpJobs: 2,
-                restoreJobs: 2,
-                databaseName: "erp",
-                databaseUserPassword: "Delphix_123!",
-                dumpDir: "/var/lib/pgsql/backups",
-                sourceHost: "10.160.1.29"
-            }
-        ],
-        postgresPort : 8002,
-        mountLocation : "/mnt/provision/pg_source_erp"
-    })
-    sync_parameters = jsonencode({
-        resync = true
-    })
-}
-*/
 
 ## Save dSource IDs to output
 output "Postgres_crm_id" {
@@ -127,12 +82,6 @@ output "Postgres_crm_id" {
     value           = delphix_appdata_dsource.Postgres_crm.id
 }
 
-/*
-output "Postgres_erp_id" {
-    depends_on      = [ delphix_appdata_dsource.Postgres_erp ]
-    value           = delphix_appdata_dsource.Postgres_erp.id
-}
-*/
 
 # MASK GOLDEN COPY vDBs
 ## CRM Mask vDB
@@ -174,21 +123,20 @@ resource "delphix_vdb" "crm-mask" {
 
 }
 
-/*
-## ERP Mask vDB
-resource "delphix_vdb" "erp-mask" {
-    depends_on              = [ delphix_appdata_dsource.Postgres_erp ]
-    name                    = "erp-mask"
-    source_data_id          = delphix_appdata_dsource.Postgres_erp.id
+# UnMASK vDBs foir demo manual masking
+resource "delphix_vdb" "crm-unmask" {
+    depends_on              = [ delphix_appdata_dsource.Postgres_crm ]
+    name                    = "crm-unmask"
+    source_data_id          = delphix_appdata_dsource.Postgres_crm.id
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
-    target_group_id         = local.group_mask
-    database_name           = "erp-mask"
+    target_group_id         = local.group_unmask
+    database_name           = "crm-unmask"
     auto_select_repository  = true
-    masked = true
+    masked = false
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/erp-mask"
-        postgresPort        = 8012
+        mountLocation       = "/mnt/provision/crm-unmask"
+        postgresPort        = 8020
     })
 
     configure_clone {
@@ -199,10 +147,6 @@ resource "delphix_vdb" "erp-mask" {
                             # reload postgress to make above take effect
                             /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
 
-                            # Masking Job
-                            ./MaskJobExecution_API.bash -h 10.160.1.160 -p 1 -j  > erpMask.log
-                            # Masking Job - will fail 
-                            #./MaskJobExecution_API.bash -h 192.168.1.1 -p 1 -j  > erpMask.log
                             EOT
         shell           = "bash"
     }
@@ -213,7 +157,7 @@ resource "delphix_vdb" "erp-mask" {
     }
 
 }
-*/
+
 
 # Dev vDBs
 ## CRM Dev vDB
@@ -249,40 +193,6 @@ resource "delphix_vdb" "crm-dev" {
 
 }
 
-/*
-## ERP Dev vDB
-resource "delphix_vdb" "erp-dev" {
-    depends_on              = [ delphix_vdb.erp-mask ]
-    name                    = "erp-dev"
-    source_data_id          = delphix_vdb.erp-mask.id
-    environment_id          = local.environment_staging
-    environment_user_id     = "postgres"
-    target_group_id         = local.group_dev
-    database_name           = "erp-dev"
-    auto_select_repository  = true
-    appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/erp-dev"
-        postgresPort        = 8032
-    })
-
-    configure_clone {
-        name            = "Open Network Access"
-        command         = <<-EOT
-                            # Update pg_hba.conf to allow all IPv4 traffic 
-                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
-                            # reload postgress to make above take effect
-                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
-                            EOT
-        shell           = "bash"
-    }
-
-    tags {
-        key   = "region"
-        value = "apac"
-    }
-
-}
-*/
 ## vDB Group for Dev
 resource "delphix_vdb_group" "apac-dev" {
     depends_on      = [ delphix_vdb.crm-dev ]
@@ -334,40 +244,6 @@ resource "delphix_vdb" "crm-qa" {
 
 }
 
-/*
-## ERP QA vDB
-resource "delphix_vdb" "erp-qa" {
-    depends_on              = [ delphix_vdb.erp-mask ]
-    name                    = "erp-qa"
-    source_data_id          = delphix_vdb.erp-mask.id
-    environment_id          = local.environment_staging
-    environment_user_id     = "postgres"
-    target_group_id         = local.group_qa
-    database_name           = "erp-qa"
-    auto_select_repository  = true
-    appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/erp-qa"
-        postgresPort        = 8052
-    })
-
-    configure_clone {
-        name            = "Open Network Access"
-        command         = <<-EOT
-                            # Update pg_hba.conf to allow all IPv4 traffic 
-                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
-                            # reload postgress to make above take effect
-                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
-                            EOT
-        shell           = "bash"
-    }
-
-    tags {
-        key   = "region"
-        value = "apac"
-    }
-
-}
-*/
 
 ## vDB Group for QA
 resource "delphix_vdb_group" "apac-qa" {
@@ -420,40 +296,7 @@ resource "delphix_vdb" "crm-enrich" {
 
 }
 
-/*
-## ERP enrich vDB                                                                                           ####### Need to add the insert hook scripts for enrich
-resource "delphix_vdb" "erp-enrich" {
-    depends_on = [ delphix_vdb.erp-mask ]
-    name                    = "erp-enrich"
-    source_data_id          = delphix_vdb.erp-mask.id
-    environment_id          = local.environment_staging
-    environment_user_id     = "postgres"
-    target_group_id         = local.group_enrich
-    database_name           = "erp-enrich"
-    auto_select_repository  = true
-    appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/erp-enrich"
-        postgresPort        = 8022
-    })
 
-    configure_clone {
-        name            = "Open Network Access"
-        command         = <<-EOT
-                            # Update pg_hba.conf to allow all IPv4 traffic 
-                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
-                            # reload postgress to make above take effect
-                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
-                            EOT
-        shell           = "bash"
-    }
-
-    tags {
-        key   = "region"
-        value = "apac"
-    }
-
-}
-*/
 
 ## vDB Group for enrich
 resource "delphix_vdb_group" "apac-enrich" {

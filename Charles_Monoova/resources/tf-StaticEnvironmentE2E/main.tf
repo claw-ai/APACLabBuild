@@ -23,11 +23,9 @@ locals {
     
     group_source            = "Source"
     group_mask              = "MaskGC"
-    group_other             = "Other"
-    crm_masked              = "crm-mask"
-    m5_1A                   = "M5_1A"   
-    m5_1B                   = "M5_1B"   
-    m5_1C                   = "M5_1C"   
+    group_dev               = "DEV"
+    group_qa                = "QA"
+    group_enrich            = "Other"
 }
 
 
@@ -124,92 +122,55 @@ resource "delphix_vdb" "crm-mask" {
 }
 
 
-## M5.1A
-resource "delphix_vdb" "M5_1A" {
+# UnMASK vDBs foir demo manual masking
+resource "delphix_vdb" "crm-unmask" {
+    depends_on              = [ delphix_appdata_dsource.Postgres_crm ]
+    name                    = "crm-unmask"
+    source_data_id          = delphix_appdata_dsource.Postgres_crm.id
+    environment_id          = local.environment_staging
+    environment_user_id     = "postgres"
+    target_group_id         = local.group_unmask
+    database_name           = "crm-unmask"
+    auto_select_repository  = true
+    masked = false
+    appdata_source_params = jsonencode({
+        mountLocation       = "/mnt/provision/crm-unmask"
+        postgresPort        = 8020
+    })
+
+    configure_clone {
+        name            = "Mask and Open Network Access"
+        command         = <<-EOT
+                            # Update pg_hba.conf to allow all IPv4 traffic 
+                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
+                            # reload postgress to make above take effect
+                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
+
+                            EOT
+        shell           = "bash"
+    }
+
+    tags {
+        key   = "region"
+        value = "apac"
+    }
+
+}
+
+# Dev vDBs
+## CRM Dev vDB
+resource "delphix_vdb" "crm-dev" {
     depends_on              = [ delphix_vdb.crm-mask ]
-    name                    = "M5_1A"
-    source_data_id          = local.crm_masked
+    name                    = "crm-dev"
+    source_data_id          = delphix_vdb.crm-mask.id
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
-    target_group_id         = local.group_other
-    database_name           = "M5_1A"
+    target_group_id         = local.group_dev
+    database_name           = "crm-dev"
     auto_select_repository  = true
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/monoova/M5_1A"
-        postgresPort        = 8060
-    })
-
-    configure_clone {
-        name            = "Open Network Access"
-        command         = <<-EOT
-                            # Update pg_hba.conf to allow all IPv4 traffic 
-                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
-                            # reload postgress to make above take effect
-                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
-
-
-                            # Drop even id records
-                            psql -p 8060 --quiet -d crm -c "delete from crm.public.contacts where id % 2 = 0;"
-                            EOT
-        shell           = "bash"
-    }
-
-    tags {
-        key   = "region"
-        value = "apac"
-    }
-
-}
-
-## M5.1B
-resource "delphix_vdb" "M5_1B" {
-    depends_on              = [ delphix_vdb.M5_1A ]
-    name                    = "M5_1B"
-    source_data_id          = local.m5_1A
-    environment_id          = local.environment_staging
-    environment_user_id     = "postgres"
-    target_group_id         = local.group_other
-    database_name           = "M5_1B"
-    auto_select_repository  = true
-    appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/monoova/M5_1B"
-        postgresPort        = 8061
-    })
-
-    configure_clone {
-        name            = "Open Network Access"
-        command         = <<-EOT
-                            # Update pg_hba.conf to allow all IPv4 traffic 
-                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
-                            # reload postgress to make above take effect
-                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
-
-                            # Update database with extra record
-                            psql -p 8061 --quiet -d crm -c "INSERT INTO public.contacts (first_name, last_name, fullname, birth_date, unit_no, streeet_no, street, suburb, state, postcode, longitude, latitude, phone_number, email, id_doc_type, id_doc_number, description) VALUES('Mary', 'Jones', 'Mary Lee Jones', '1968-10-02', 'L14', '4-6', 'Blighe St', 'Sydney', 'NSW', '2000', '151.2105208', '-33.8657476', '+61 (02)8265 5625', 'mary.jones@example.com', '02', 'PA532705252', NULL);"
-                            EOT
-        shell           = "bash"
-    }
-
-    tags {
-        key   = "region"
-        value = "apac"
-    }
-
-}
-
-## M5.1C
-resource "delphix_vdb" "M5_1C" {
-    depends_on              = [ delphix_vdb.M5_1B ]
-    name                    = "M5_1C"
-    source_data_id          = local.m5_1B
-    environment_id          = local.environment_staging
-    environment_user_id     = "postgres"
-    target_group_id         = local.group_other
-    database_name           = "M5_1C"
-    auto_select_repository  = true
-    appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/monoova/M5_1C"
-        postgresPort        = 8062
+        mountLocation       = "/mnt/provision/crm-dev"
+        postgresPort        = 8031
     })
 
     configure_clone {
@@ -229,3 +190,123 @@ resource "delphix_vdb" "M5_1C" {
     }
 
 }
+
+## vDB Group for Dev
+resource "delphix_vdb_group" "apac-dev" {
+    depends_on      = [ delphix_vdb.crm-dev ]
+    name            = "apac-dev"
+    vdb_ids         = [ delphix_vdb.crm-dev.id ]
+    
+}
+
+## Save vDB Group ID to output
+output "apac-dev-id" {
+    depends_on      = [ delphix_vdb_group.apac-dev ]
+    value           = delphix_vdb_group.apac-dev.id
+}
+
+
+
+
+# QA vDBs
+## CRM QA vDB
+resource "delphix_vdb" "crm-qa" {
+    depends_on              = [ delphix_vdb.crm-mask ]
+    name                    = "crm-qa"
+    source_data_id          = delphix_vdb.crm-mask.id
+    environment_id          = local.environment_staging
+    environment_user_id     = "postgres"
+    target_group_id         = local.group_qa
+    database_name           = "crm-qa"
+    auto_select_repository  = true
+    appdata_source_params = jsonencode({
+        mountLocation       = "/mnt/provision/crm-qa"
+        postgresPort        = 8051
+    })
+
+    configure_clone {
+        name            = "Open Network Access"
+        command         = <<-EOT
+                            # Update pg_hba.conf to allow all IPv4 traffic 
+                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
+                            # reload postgress to make above take effect
+                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
+                            EOT
+        shell           = "bash"
+    }
+
+    tags {
+        key   = "region"
+        value = "apac"
+    }
+
+}
+
+
+
+## vDB Group for QA
+resource "delphix_vdb_group" "apac-qa" {
+    depends_on      = [ delphix_vdb.crm-qa]
+    name            = "apac-qa"
+    vdb_ids         = [delphix_vdb.crm-qa.id]
+}
+
+## Save vDB Group ID to output
+output "apac-qa-id" {
+    depends_on      = [ delphix_vdb_group.apac-qa ]
+    value           = delphix_vdb_group.apac-qa.id
+}
+
+
+# Enrichment vDBs
+## CRM enrich vDB
+resource "delphix_vdb" "crm-enrich" {
+    depends_on              = [ delphix_vdb.crm-mask ]
+    name                    = "crm-enrich"
+    source_data_id          = delphix_vdb.crm-mask.id
+    environment_id          = local.environment_staging
+    environment_user_id     = "postgres"
+    target_group_id         = local.group_enrich
+    database_name           = "crm-enrich"
+    auto_select_repository  = true
+    appdata_source_params = jsonencode({
+        mountLocation       = "/mnt/provision/crm-enrich"
+        postgresPort        = 8021
+    })
+
+    configure_clone {
+        name            = "Open Network Access"
+        command         = <<-EOT
+                            # Update pg_hba.conf to allow all IPv4 traffic 
+                            echo "host  all   all   0.0.0.0/0    trust"  >> $DLPX_DATA_DIRECTORY/data/pg_hba.conf
+                            # reload postgress to make above take effect
+                            /usr/bin/pg_ctl reload -D $DLPX_DATA_DIRECTORY/data
+                            
+                            #Update database with extra record
+                            psql -p 8021 --quiet -d crm -c "INSERT INTO public.contacts (first_name, last_name, fullname, birth_date, unit_no, streeet_no, street, suburb, state, postcode, longitude, latitude, phone_number, email, id_doc_type, id_doc_number, description) VALUES('Jon', 'Hinde', 'Jon Lee Hinde', '1978-10-02', 'L14', '4-6', 'Blighe St', 'Sydney', 'NSW', '2000', '151.2105208', '-33.8657476', '+61 (02)8265 5625', 'Jon.Hinde@yahoo.com', '02', 'PA532705252', NULL);"
+                            EOT
+        shell           = "bash"
+    }
+
+    tags {
+        key   = "region"
+        value = "apac"
+    }
+
+}
+
+
+
+## vDB Group for enrich
+resource "delphix_vdb_group" "apac-enrich" {
+    depends_on      = [ delphix_vdb.crm-enrich]
+    name            = "apac-enrich"
+    vdb_ids         = [delphix_vdb.crm-enrich.id]
+}
+
+## Save vDB Group ID to output
+output "apac-enrich-id" {
+    depends_on      = [ delphix_vdb_group.apac-enrich ]
+    value           = delphix_vdb_group.apac-enrich.id
+}
+

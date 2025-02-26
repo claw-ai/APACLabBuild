@@ -41,9 +41,7 @@ echo
 
 echo updating DCT Address...
 sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-StaticEnvironmentMaskGCOnly/main.tf
-sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-5.1A/main.tf
-sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-5.1B/main.tf
-sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-5.1C/main.tf
+sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-5.1x/main.tf
 
 # Build Static environment
 cd ./resources/tf-StaticEnvironmentMaskGCOnly

@@ -123,18 +123,18 @@ resource "delphix_vdb" "crm-mask" {
 }
 
 # UnMASK vDBs foir demo manual masking
-resource "delphix_vdb" "crm-unmask" {
+resource "delphix_vdb" "crm-4mask" {
     depends_on              = [ delphix_appdata_dsource.Postgres_crm ]
-    name                    = "crm-unmask"
+    name                    = "crm-4mask"
     source_data_id          = delphix_appdata_dsource.Postgres_crm.id
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
     target_group_id         = local.group_enrich
-    database_name           = "crm-unmask"
+    database_name           = "crm-4mask"
     auto_select_repository  = true
     masked = false
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/crm-unmask"
+        mountLocation       = "/mnt/provision/crm-4mask"
         postgresPort        = 8040
     })
 

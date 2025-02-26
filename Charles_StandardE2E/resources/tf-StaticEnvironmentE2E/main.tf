@@ -26,7 +26,7 @@ locals {
     group_dev               = "DEV"
     group_qa                = "QA"
     group_enrich            = "Other"
-    group_unmask            = "UnMasked"
+    group_unmask            = "Unmask"
 }
 
 
@@ -135,7 +135,7 @@ resource "delphix_vdb" "crm-unmask" {
     auto_select_repository  = true
     masked = false
     appdata_source_params = jsonencode({
-        mountLocation       = "/mnt/provision/crm_unmask"
+        mountLocation       = "/mnt/provision/crm-unmask"
         postgresPort        = 8040
     })
 

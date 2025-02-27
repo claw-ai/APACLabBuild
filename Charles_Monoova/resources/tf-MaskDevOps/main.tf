@@ -29,11 +29,6 @@ locals {
 
 }
 
-## Save dSource IDs to output
-output "Postgres_crm_id" {
-    depends_on      = [ delphix_appdata_dsource.Postgres_crm ]
-    value           = delphix_appdata_dsource.Postgres_crm.id
-}
 
 # MASK GOLDEN COPY vDBs
 ## CRM Mask vDB

@@ -20,7 +20,9 @@ provider "delphix" {
 locals {
     environment_source      = "Postgres Source"
     environment_staging     = "Postgres Staging"
-    
+
+    Postgres_crm            = "delphix_appdata_dsource.Postgres_crm"
+
     group_source            = "Source"
     group_mask              = "MaskGC"
     group_dev               = "DEV"
@@ -34,7 +36,7 @@ locals {
 ## CRM Mask vDB
 resource "delphix_vdb" "crm-mask" {
     name                    = "crm-mask"
-    source_data_id          = delphix_appdata_dsource.Postgres_crm.id
+    source_data_id          = local.Postgres_crm
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
     target_group_id         = local.group_mask
@@ -73,7 +75,7 @@ resource "delphix_vdb" "crm-mask" {
 # UnMASK vDBs foir demo manual masking
 resource "delphix_vdb" "crm-4mask" {
     name                    = "crm-4mask"
-    source_data_id          = delphix_appdata_dsource.Postgres_crm.id
+    source_data_id          = local.Postgres_crm
     environment_id          = local.environment_staging
     environment_user_id     = "postgres"
     target_group_id         = local.group_enrich

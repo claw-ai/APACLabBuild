@@ -29,8 +29,7 @@ echo
 
 # Update Terraform jobs with correct Job IDs in hook scripts
 echo updating hook scripts...
-sed -i "s/-p 1 -j  > crmMask.log/-p 1 -j $CRMMASKGCJOBID > crmMask.log/g" ./resources/tf-StaticEnvironmentE2E/main.tf
-# sed -i "s/-p 1 -j  > erpMask.log/-p 1 -j $ERPMASKGCJOBID > erpMask.log/g" ./resources/tf-StaticEnvironmentE2E/main.tf
+sed -i "s/-p 1 -j  > crmMask.log/-p 1 -j $CRMMASKGCJOBID > crmMask.log/g" ./resources/tf-PostgresDSource/main.tf
 echo
 
 # Get configuted SC Address
@@ -41,6 +40,8 @@ echo
 
 echo updating DCT Address...
 sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-PostgresDSource/main.tf
+sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-MaskDevOps/main.tf
+sed -i "s/host              = \"\"/host              = \"$DCTADDRESS\"/g" ./resources/tf-5.1x/main.tf
 
 # Build Static environment
 cd ./resources/tf-PostgresDSource
